@@ -75,7 +75,7 @@ for universidades in os.listdir(caminhoDiretorio):
                     else:
                         imagem_rotacionada = imagem
 
-                    # Coordenadas para corte (agora usando as dimensões da imagem rotacionada)
+                    # Coordenadas para cortes
                     x1 = max(0, x - h // 2)
                     x2 = min(imagem_rotacionada.shape[1], x + h // 2)
                     y1 = max(0, y - w // 2)
