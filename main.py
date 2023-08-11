@@ -69,20 +69,20 @@ for universidades in os.listdir(caminhoDiretorio):
                     h = int(vaga.find('rotatedRect').find('size').get('h'))
                     angulo = int(vaga.find('rotatedRect').find('angle').get("d"))
 
-                    # Coordenadas para corte
-                    x1 = max(0, x - w // 2)
-                    x2 = min(imagem.shape[1], x + w // 2)
-                    y1 = max(0, y - h // 2)
-                    y2 = min(imagem.shape[0], y + h // 2)
-
-                    # Cortar a imagem
-                    recorte = imagem[y1:y2, x1:x2]
-
                     # Rotação da imagem
                     if angulo >= 45:
-                        imagemFinal = cv2.rotate(recorte, cv2.ROTATE_90_CLOCKWISE)
+                        imagem_rotacionada = cv2.rotate(imagem, cv2.ROTATE_90_CLOCKWISE)
                     else:
-                        imagemFinal = recorte
+                        imagem_rotacionada = imagem
+
+                    # Coordenadas para corte (agora usando as dimensões da imagem rotacionada)
+                    x1 = max(0, x - h // 2)
+                    x2 = min(imagem_rotacionada.shape[1], x + h // 2)
+                    y1 = max(0, y - w // 2)
+                    y2 = min(imagem_rotacionada.shape[0], y + w // 2)
+
+                    # Cortar a imagem
+                    imagemFinal = imagem_rotacionada[y1:y2, x1:x2]
 
                     # Criando nome da imagem
                     nomeImagem = listaJPG[i].replace(".jpg", "") + "#" + vagaID + ".jpg"
