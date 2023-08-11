@@ -35,9 +35,9 @@ for universidades in os.listdir(caminhoDiretorio):
             # Criando diretório
             os.makedirs(caminhoDatasNovo, exist_ok=True)
 
-            # Criando listas para armazenar os arquivos .xml e .jpg
-            listaXML = [arq for arq in os.listdir(caminhoDatas) if arq.endswith('.xml')]
-            listaJPG = [arq for arq in os.listdir(caminhoDatas) if arq.endswith('.jpg')]
+            # Criando listas para armazenar os arquivos .xml e .jpg e ordenando
+            listaXML = sorted([arq for arq in os.listdir(caminhoDatas) if arq.endswith('.xml')])
+            listaJPG = sorted([arq for arq in os.listdir(caminhoDatas) if arq.endswith('.jpg')])
 
             # Criando pastas Empty e Occupied
             caminhoEmpty = os.path.join(caminhoDatasNovo, 'Empty')
@@ -85,12 +85,10 @@ for universidades in os.listdir(caminhoDiretorio):
                         imagemFinal = recorte
 
                     # Criando nome da imagem
-                    nomeImagem = datas + "#" + vagaID + ".jpg"
+                    nomeImagem = listaJPG[i].replace(".jpg", "") + "#" + vagaID + ".jpg"
 
                     # Colocando imagem em Empty ou Occupied
                     if ocupacao == '0':
-                        cv2.imwrite(os.path.join(caminhoEmpty, "#" + vagaID + '.jpg'), imagemFinal)
+                        cv2.imwrite(os.path.join(caminhoEmpty, nomeImagem), imagemFinal)
                     elif ocupacao == '1':
-                        cv2.imwrite(os.path.join(caminhoOccupied, "#" + vagaID + '.jpg'), imagemFinal)
-
-                    
+                        cv2.imwrite(os.path.join(caminhoOccupied, nomeImagem), imagemFinal)
