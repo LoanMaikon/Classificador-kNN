@@ -1,59 +1,73 @@
 import cv2
 import numpy as np
 import os
+import csv
 from skimage import feature
 
 class LBP:
     # Construtor da classe
-	def __init__(self, numeroPontos, raio):
-		self.numeroPontos = numeroPontos
-		self.raio = raio
+    def __init__(self, numeroPontos, raio):
+        self.numeroPontos = numeroPontos
+        self.raio = raio
 
     # Construindo o histograma
-	def construirHistograma(self, imagem, eps=1e-7):
+    def construirHistograma(self, imagem, eps=1e-7):
         # Calculando o LBP da imagem
-		lbp = feature.local_binary_pattern(imagem, self.numeroPontos, self.raio, method="uniform")
+        lbp = feature.local_binary_pattern(imagem, self.numeroPontos, self.raio, method="uniform")
 
         # Calculando o histograma a partir do LBP
-		(hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, self.numeroPontos + 3), range=(0, self.numeroPontos + 2))
+        (hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, self.numeroPontos + 3), range=(0, self.numeroPontos + 2))
 
-		# Normalizando histograma
-		hist = hist.astype("float")
-		hist /= (hist.sum() + eps)
+        # Normalizando o histograma
+        hist = hist.astype("float")
+        hist /= (hist.sum() + eps)
 
         # Retornando o histograma
-		return hist
+        return hist
 
-caminhoDiretorio= '/home/luan/Desktop/PKLot/PKLotSegmented'
+caminhoDiretorio = '/home/luan/Desktop/PKLot/PKLotSegmented'
+caminhoArquivoCSV = '/home/luan/Desktop/PKLot/caracteristicas.csv'
 
-for universidades in os.listdir(caminhoDiretorio):
-    # Caminho para as universidades 
-    caminhoUniversidades = os.path.join(caminhoDiretorio, universidades)
+# Abrindo o arquivo .csv
+with open(caminhoArquivoCSV, mode="a", newline="") as arquivo:
+    escritor = csv.writer(arquivo, delimiter=";")
 
-    for climas in os.listdir(caminhoUniversidades):
-        # Caminho para os climas
-        caminhoClimas = os.path.join(caminhoUniversidades, climas)
+    for universidades in os.listdir(caminhoDiretorio):
+        # Caminho para as universidades 
+        caminhoUniversidades = os.path.join(caminhoDiretorio, universidades)
 
-        for datas in os.listdir(caminhoClimas):
-            # Caminho para as datas
-            caminhoDatas = os.path.join(caminhoClimas, datas)
+        for climas in os.listdir(caminhoUniversidades):
+            # Caminho para os climas
+            caminhoClimas = os.path.join(caminhoUniversidades, climas)
 
-            for ocupacao in os.listdir(caminhoDatas):
-                # Caminho para as ocupações
-                caminhoOcupacoes = os.path.join(caminhoDatas, ocupacao)
+            for datas in os.listdir(caminhoClimas):
+                # Caminho para as datas
+                caminhoDatas = os.path.join(caminhoClimas, datas)
 
-                for imagens in os.listdir(caminhoOcupacoes):
-                    # Caminho para as imagens
-                    caminhoImagens = os.path.join(caminhoOcupacoes, imagens)
+                for ocupacao in os.listdir(caminhoDatas):
+                    # Caminho para as ocupações
+                    caminhoOcupacoes = os.path.join(caminhoDatas, ocupacao)
 
-                    # Carregando a imagem e transformando em escala de cinza
-                    imagem = cv2.imread(caminhoImagens)
-                    imagem = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
+                    for imagens in os.listdir(caminhoOcupacoes):
+                        # Caminho para as imagens
+                        caminhoImagens = os.path.join(caminhoOcupacoes, imagens)
 
-                    # Criando descritor LBP (recebendo informações)
-                    descritor = LBP(24, 8)
+                        # Carregando a imagem e transformando em escala de cinza
+                        imagem = cv2.imread(caminhoImagens)
+                        imagem = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
 
-                    # Criando vetor de características
-                    vetorCaracteristicas = descritor.construirHistograma(imagem)
+                        # Criando descritor LBP (recebendo informações)
+                        descritor = LBP(24, 8)
 
-                    print(vetorCaracteristicas)
+                        # Criando vetor de características
+                        vetorCaracteristicas = descritor.construirHistograma(imagem)
+
+                        # Criando a string de escrita do arquivo .csv
+                        escrita = ";".join(map(str, vetorCaracteristicas))
+                        if ocupacao == "Occupied":
+                            escrita += ";1"
+                        else:
+                            escrita += ";0"
+
+                        # Escrevendo a string no arquivo .csv
+                        escritor.writerow([escrita])
