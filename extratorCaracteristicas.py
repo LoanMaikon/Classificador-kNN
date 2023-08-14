@@ -14,13 +14,9 @@ class LBP:
     def construirHistograma(self, imagem, eps=1e-7):
         # Calculando o LBP da imagem
         lbp = feature.local_binary_pattern(imagem, self.numeroPontos, self.raio, method="uniform")
-
+        
         # Calculando o histograma a partir do LBP
         (hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, self.numeroPontos + 3), range=(0, self.numeroPontos + 2))
-
-        # Normalizando o histograma
-        hist = hist.astype("float")
-        hist /= (hist.sum() + eps)
 
         # Retornando o histograma
         return hist
@@ -57,7 +53,7 @@ with open(caminhoArquivoCSV, mode="a", newline="") as arquivo:
                         imagem = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
 
                         # Criando descritor LBP (recebendo informações)
-                        descritor = LBP(24, 8)
+                        descritor = LBP(8, 1)
 
                         # Criando vetor de características
                         vetorCaracteristicas = descritor.construirHistograma(imagem)
