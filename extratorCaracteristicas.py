@@ -13,7 +13,7 @@ class LBP:
     # Construindo o histograma
     def construirHistograma(self, imagem, eps=1e-7):
         # Calculando o LBP da imagem
-        lbp = feature.local_binary_pattern(imagem, self.numeroPontos, self.raio, method="uniform")
+        lbp = feature.local_binary_pattern(imagem, self.numeroPontos, self.raio)
         
         # Calculando o histograma a partir do LBP
         (hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, 257), range=(0, 256))
