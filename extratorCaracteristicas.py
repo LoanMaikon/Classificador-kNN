@@ -16,7 +16,7 @@ class LBP:
         lbp = feature.local_binary_pattern(imagem, self.numeroPontos, self.raio, method="uniform")
         
         # Calculando o histograma a partir do LBP
-        (hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, 257), range=(0, 255))
+        (hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, 257), range=(0, 256))
 
         # Retornando o histograma
         return hist
