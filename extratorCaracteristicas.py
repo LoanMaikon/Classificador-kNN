@@ -40,6 +40,7 @@ for universidades in os.listdir(caminhoDiretorio):
             # Caminho para as datas
             caminhoDatas = os.path.join(caminhoClimas, datas)
 
+            # Separando treino e teste
             if i % 2 == 0:
                 caminhoArquivoCSV = caminhoArquivoCSV_treino # Caso i seja par, usa data para treino
             else:
@@ -76,5 +77,4 @@ for universidades in os.listdir(caminhoDiretorio):
                         # Escrevendo a string no arquivo .csv
                         escritor.writerow([escrita])
 
-
-            i += 1 #Acrescenta ao iterador
+            i += 1 # Acrescenta ao iterador das datas
