@@ -22,23 +22,31 @@ class LBP:
         return hist
 
 caminhoDiretorio = '/home/luan/Desktop/PKLot/PKLotSegmented'
-caminhoArquivoCSV = '/home/luan/Desktop/PKLot/caracteristicas.csv'
 
-# Abrindo o arquivo .csv
-with open(caminhoArquivoCSV, mode="a", newline="") as arquivo:
-    escritor = csv.writer(arquivo, delimiter=";")
+for universidades in os.listdir(caminhoDiretorio):
+    # Caminho para as universidades 
+    caminhoUniversidades = os.path.join(caminhoDiretorio, universidades)
 
-    for universidades in os.listdir(caminhoDiretorio):
-        # Caminho para as universidades 
-        caminhoUniversidades = os.path.join(caminhoDiretorio, universidades)
+    caminhoArquivoCSV_treino = os.path.join(caminhoUniversidades, 'caracteristicas_treino.csv')
+    caminhoArquivoCSV_teste = os.path.join(caminhoUniversidades, 'caracteristicas_teste.csv')
 
-        for climas in os.listdir(caminhoUniversidades):
-            # Caminho para os climas
-            caminhoClimas = os.path.join(caminhoUniversidades, climas)
+    for climas in os.listdir(caminhoUniversidades):
+        # Caminho para os climas
+        caminhoClimas = os.path.join(caminhoUniversidades, climas)
 
-            for datas in os.listdir(caminhoClimas):
-                # Caminho para as datas
-                caminhoDatas = os.path.join(caminhoClimas, datas)
+        i = 0 # Para iterar entre os arquivos de treino e teste
+
+        for datas in os.listdir(caminhoClimas):
+            # Caminho para as datas
+            caminhoDatas = os.path.join(caminhoClimas, datas)
+
+            if i % 2 == 0:
+                caminhoArquivoCSV = caminhoArquivoCSV_treino # Caso i seja par, usa data para treino
+            else:
+                caminhoArquivoCSV = caminhoArquivoCSV_teste # Caso i seja ímpar, usa data para teste
+
+            with open(caminhoArquivoCSV, 'a') as arquivoCSV:
+                escritor = csv.writer(arquivoCSV, delimiter=';')
 
                 for ocupacao in os.listdir(caminhoDatas):
                     # Caminho para as ocupações
@@ -67,3 +75,6 @@ with open(caminhoArquivoCSV, mode="a", newline="") as arquivo:
 
                         # Escrevendo a string no arquivo .csv
                         escritor.writerow([escrita])
+
+
+            i += 1 #Acrescenta ao iterador
