@@ -47,20 +47,24 @@ for universidades in os.listdir(caminhoDiretorio):
             for linha in leitor:
                 campos = linha[0].split(';')
 
-                linhaNormalizada = [] # Inicializando linha normalizada
+                camposNormalizados = []  # Inicializando campos normalizados
 
                 # Iterando em cada campo e normalizando
                 for i, campo_str in enumerate(campos[:-1]):
                     campo = int(campo_str)
 
                     # Normalizando o campo
-                    campoNormalizado = (campo - valoresMin[i]) / (valoresMax[i] - valoresMin[i])
+                    campo_normalizado = (campo - valoresMin[i]) / (valoresMax[i] - valoresMin[i])
 
-                    # Adicionando o campo normalizado na linha normalizada
-                    linhaNormalizada.append(campoNormalizado)
+                    # Adicionando o campo normalizado à lista de campos normalizados
+                    camposNormalizados.append(str(campo_normalizado))  # Convertendo para string
 
-                # Adicionando a ocupação na linha normalizada
-                linhaNormalizada.append(campos[-1])
+                # Adicionando a ocupação à lista de campos normalizados
+                camposNormalizados.append(campos[-1])
+
+                # Criando a linha normalizada como uma string
+                linhaNormalizada = ";".join(camposNormalizados)
 
                 # Escrevendo a linha normalizada no arquivo CSV
-                escritor.writerow(linhaNormalizada)
+                escritor.writerow([linhaNormalizada])  # Convertendo para uma lista única
+
