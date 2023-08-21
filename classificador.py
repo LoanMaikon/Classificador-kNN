@@ -3,33 +3,32 @@ from collections import Counter
 import csv
 import os
 
-def euclidean_distance(x1, x2):
-    distance = np.sqrt(np.sum((x1-x2)**2))
-    return distance
+def distanciaEuclidiana(x1, x2):
+    return np.sqrt(np.sum((x1-x2)**2))
 
 class KNN:
     def __init__(self, k=3):
         self.k = k
 
     def fit(self, X, y):
-        self.X_train = X
-        self.y_train = y
+        self.X_treino = X
+        self.y_treino = y
 
     def predict(self, X):
         predictions = [self._predict(x) for x in X]
         return predictions
 
     def _predict(self, x):
-        # compute the distance
-        distances = [euclidean_distance(x, x_train) for x_train in self.X_train]
+        # Distancias entre o ponto x e todos os outros pontos
+        distancias = [distanciaEuclidiana(x, x_train) for x_train in self.X_treino]
     
-        # get the closest k
-        k_indices = np.argsort(distances)[:self.k]
-        k_nearest_labels = [self.y_train[i] for i in k_indices]
+        # Pegando os índices dos k vizinhos mais próximos
+        k_indices = np.argsort(distancias)[:self.k]
+        ocupacoesProximas = [self.y_treino[i] for i in k_indices]
 
-        # majority vote
-        most_common = Counter(k_nearest_labels).most_common()
-        return most_common[0][0]
+        # Maior ocorrência de ocupação entre os k vizinhos mais próximos
+        predicao = Counter(ocupacoesProximas).most_common()
+        return predicao[0][0]
 
 # Caminho para o diretório das imagens
 caminhoDiretorio = '/home/luan/Desktop/PKLot/PKLotSegmented'
@@ -98,10 +97,6 @@ knn.fit(dadosTreinoUFPR04, ocupacoesUFPR04)
 # Fazer previsões para as características de teste
 previsoes = knn.predict(caracteristicasTesteUFPR04)
 
-# Imprimir as previsões
-for previsao in previsoes:
-    # Printando previsão
-    print('Previsão: ' + previsao)
-
-    # Printando previsão certa
-    print('Previsão certa: ' + ocupacoesUFPR04[previsao])
+# Imprimir acurácia
+acuracia = np.sum(previsoes == ocupacoesUFPR04) / len(ocupacoesUFPR04)
+print('Acurácia: ', acuracia)
