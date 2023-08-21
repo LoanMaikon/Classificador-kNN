@@ -1,5 +1,7 @@
 import numpy as np
 from collections import Counter
+import csv
+import os
 
 def euclidean_distance(x1, x2):
     distance = np.sqrt(np.sum((x1-x2)**2))
@@ -56,7 +58,7 @@ with open(caminhoArquivoCSV_treino_normalizado_UFPR04, 'r') as arquivoCSV_treino
         caracteristicas = np.array([float(campo) for campo in campos[:-1]])
 
         # Retirando a ocupação
-        ocupacao = linha[-1]
+        ocupacao = campos[-1]
 
         # Adicionando os dados de treino e a ocupação nas listas
         dadosTreinoUFPR04.append(caracteristicas)
@@ -66,13 +68,24 @@ with open(caminhoArquivoCSV_treino_normalizado_UFPR04, 'r') as arquivoCSV_treino
 dadosTreinoUFPR04 = np.array(dadosTreinoUFPR04)
 ocupacoesUFPR04 = np.array(ocupacoesUFPR04)
 
-# Criando lista de teste para UFPR04
+# Diretório para .csv de teste
 caminhoArquivoCSV_teste_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_teste.csv')
+
+# Colocando as características de teste em um vetor
 with open(caminhoArquivoCSV_teste_UFPR04, 'r') as arquivoCSV_teste_UFPR04:
-    leitor = csv.reader(arquivoCSV_teste_UFPR04, delimiter=';')
+    leitor = csv.reader(arquivoCSV_teste_UFPR04)
+
     caracteristicasTesteUFPR04 = []
+
+    # Iterando nas linhas do arquivo .csv para retirar características
     for linha in leitor:
-        caracteristicas = np.array([float(campo) for campo in linha[:-1]])
+        # Separando os campos da linha
+        campos = linha[0].split(';')
+
+        # Colocando as características da linha em um vetor
+        caracteristicas = np.array([float(campo) for campo in campos[:-1]])
+
+        # Adicionando as características na lista
         caracteristicasTesteUFPR04.append(caracteristicas)
 
 # Convertendo lista para numpy array
@@ -80,14 +93,15 @@ caracteristicasTesteUFPR04 = np.array(caracteristicasTesteUFPR04)
 
 # Criar o classificador KNN
 knn = KNN(kValor)
-knn.fit(dadosTreinoPUC, ocupacoesPUC)
+knn.fit(dadosTreinoUFPR04, ocupacoesUFPR04)
 
 # Fazer previsões para as características de teste
-previsoes = knn.predict(caracteristicasTestePUC)
+previsoes = knn.predict(caracteristicasTesteUFPR04)
 
 # Imprimir as previsões
 for previsao in previsoes:
-    print(previsao)
+    # Printando previsão
+    print('Previsão: ' + previsao)
 
     # Printando previsão certa
-    print('Ocupação: ' + ocupacoesPUC[previsao])
+    print('Previsão certa: ' + ocupacoesUFPR04[previsao])
