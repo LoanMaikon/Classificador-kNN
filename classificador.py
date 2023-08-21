@@ -1,135 +1,93 @@
-import os
-import csv
 import numpy as np
+from collections import Counter
 
-# Função para calcular a distância euclidiana entre dois vetores e retornar o vetor resultante
-def distanciaEuclidiana(vetor1, vetor2):
-    return np.sqrt(np.sum((vetor1 - vetor2)**2))
+def euclidean_distance(x1, x2):
+    distance = np.sqrt(np.sum((x1-x2)**2))
+    return distance
 
-# Função de classificação K-NN
-def kNN(dadosTreino, ocupacoes, caracteristicasImagemTeste, kValor):
-    # Vetor de distâncias
-    distancias = []
+class KNN:
+    def __init__(self, k=3):
+        self.k = k
 
-    for i in range(len(dadosTreino)):
-        dist = distanciaEuclidiana(dadosTreino[i], caracteristicasImagemTeste)
-        distancias.append((dist, ocupacoes[i]))
+    def fit(self, X, y):
+        self.X_train = X
+        self.y_train = y
 
-    distancias.sort(key=lambda x: x[0])  # Ordenar com base nas distâncias
-    k_vizinhos = distancias[:kValor]  # Selecionar os k vizinhos mais próximos
+    def predict(self, X):
+        predictions = [self._predict(x) for x in X]
+        return predictions
 
-    # Contagem das classes dos vizinhos mais próximos
-    contagem_classes = {0: 0, 1: 0}  # Supondo que 0 é vaga vazia e 1 é vaga ocupada
-    for dist, label in k_vizinhos:
-        contagem_classes[label] += 1
+    def _predict(self, x):
+        # compute the distance
+        distances = [euclidean_distance(x, x_train) for x_train in self.X_train]
+    
+        # get the closest k
+        k_indices = np.argsort(distances)[:self.k]
+        k_nearest_labels = [self.y_train[i] for i in k_indices]
 
-    # Escolha da classe mais comum entre os vizinhos
-    resultado = max(contagem_classes, key=contagem_classes.get)
-    return resultado
-
-# Definindo K-NN de 3 vizinhos
-kValor = 3
-
-# Vetores para armazenar os dados de treinamento
-dadosTreinoPUC = []
-dadosTreinoUFPR04 = []
-dadosTreinoUFPR05 = []
-ocupacoesPUC = []
-ocupacoesUFPR04 = []
-ocupacoesUFPR05 = []
+        # majority vote
+        most_common = Counter(k_nearest_labels).most_common()
+        return most_common[0][0]
 
 # Caminho para o diretório das imagens
 caminhoDiretorio = '/home/luan/Desktop/PKLot/PKLotSegmented'
-
-# Retirando dados da PUC
-caminhoPUC = os.path.join(caminhoDiretorio, 'PUC')
-caminhoArquivoCSV_treino_normalizado_PUC = os.path.join(caminhoPUC, 'caracteristicas_treino_normalizado.csv')
-
-with open(caminhoArquivoCSV_treino_normalizado_PUC, 'r') as arquivoCSV_treino_normalizado_PUC:
-    leitor = csv.reader(arquivoCSV_treino_normalizado_PUC, delimiter=';')  # Definir o separador como ";"
-    
-    # Iterando nas linhas do arquivo .csv para retirar características e ocupação
-    for linha in leitor:
-        # Campos já é uma lista de campos separados por ";"
-        campos = linha
-
-        # Colocando as características da linha em um vetor
-        caracteristicas = np.array([float(campo) for campo in campos[:-1]])
-
-        # Retirando a ocupação
-        ocupacao = campos[-1]
-
-        # Adicionando os dados de treino e a ocupação nas listas
-        dadosTreinoPUC.append(caracteristicas)
-        ocupacoesPUC.append(ocupacao)
-
-
 
 # Retirando dados da UFPR04
 caminhoUFPR04 = os.path.join(caminhoDiretorio, 'UFPR04')
 caminhoArquivoCSV_treino_normalizado_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_treino_normalizado.csv')
 
+# Definindo k-NN de 3 vizinhos
+kValor = 3
+
+# Vetores para armazenar os dados de treinamento
+dadosTreinoUFPR04 = [] # X_treino
+ocupacoesUFPR04 = [] # y_treino
+
+# Preenchendo vetores de treinamento
 with open(caminhoArquivoCSV_treino_normalizado_UFPR04, 'r') as arquivoCSV_treino_normalizado_UFPR04:
     leitor = csv.reader(arquivoCSV_treino_normalizado_UFPR04)
     
     # Iterando nas linhas do arquivo .csv para retirar características e ocupação
     for linha in leitor:
-        # Dividir a linha em campos usando o separador ";"
-        campos = linha
+        # Separando os campos da linha
+        campos = linha[0].split(';')
 
         # Colocando as características da linha em um vetor
         caracteristicas = np.array([float(campo) for campo in campos[:-1]])
 
         # Retirando a ocupação
-        ocupacao = campos[-1]
+        ocupacao = linha[-1]
 
         # Adicionando os dados de treino e a ocupação nas listas
         dadosTreinoUFPR04.append(caracteristicas)
         ocupacoesUFPR04.append(ocupacao)
     
-# Retirando dados da UFPR05
-caminhoUFPR05 = os.path.join(caminhoDiretorio, 'UFPR05')
-caminhoArquivoCSV_treino_normalizado_UFPR05 = os.path.join(caminhoUFPR05, 'caracteristicas_treino_normalizado.csv')
-
-with open(caminhoArquivoCSV_treino_normalizado_UFPR05, 'r') as arquivoCSV_treino_normalizado_UFPR05:
-    leitor = csv.reader(arquivoCSV_treino_normalizado_UFPR05)
-    
-    # Iterando nas linhas do arquivo .csv para retirar características e ocupação
-    for linha in leitor:
-        # Dividir a linha em campos usando o separador ";"
-        campos = linha
-
-        # Colocando as características da linha em um vetor
-        caracteristicas = np.array([float(campo) for campo in campos[:-1]])
-
-        # Retirando a ocupação
-        ocupacao = campos[-1]
-
-        # Adicionando os dados de treino e a ocupação nas listas
-        dadosTreinoUFPR05.append(caracteristicas)
-        ocupacoesUFPR05.append(ocupacao)
-
-# Convertendo em vetores numpy para cálculos mais eficientes
-dadosTreinoPUC = np.array(dadosTreinoPUC)
-ocupacoesPUC = np.array(ocupacoesPUC)
+# Convertendo listas para numpy arrays
 dadosTreinoUFPR04 = np.array(dadosTreinoUFPR04)
 ocupacoesUFPR04 = np.array(ocupacoesUFPR04)
-dadosTreinoUFPR05 = np.array(dadosTreinoUFPR05)
-ocupacoesUFPR05 = np.array(ocupacoesUFPR05)
 
-print(dadosTreinoPUC)
-
-# Teste para PUC
-caminhoArquivoCSV_teste_PUC = os.path.join(caminhoPUC, 'caracteristicas_teste.csv')
-
-with open(caminhoArquivoCSV_teste_PUC, 'r') as arquivoCSV_teste_PUC:
-    leitor = csv.reader(arquivoCSV_teste_PUC)
-    
-    # Iterando nas linhas do arquivo .csv de teste
+# Criando lista de teste para UFPR04
+caminhoArquivoCSV_teste_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_teste.csv')
+with open(caminhoArquivoCSV_teste_UFPR04, 'r') as arquivoCSV_teste_UFPR04:
+    leitor = csv.reader(arquivoCSV_teste_UFPR04, delimiter=';')
+    caracteristicasTesteUFPR04 = []
     for linha in leitor:
-        campos = linha[0].split(';')
+        caracteristicas = np.array([float(campo) for campo in linha[:-1]])
+        caracteristicasTesteUFPR04.append(caracteristicas)
 
-        caracteristicasImagemTeste = np.array([int(campo) for campo in campos[:-1]])
+# Convertendo lista para numpy array
+caracteristicasTesteUFPR04 = np.array(caracteristicasTesteUFPR04)
 
-        resultado = kNN(dadosTreinoPUC, ocupacoesPUC, caracteristicasImagemTeste, kValor)
-        print(resultado)
+# Criar o classificador KNN
+knn = KNN(kValor)
+knn.fit(dadosTreinoPUC, ocupacoesPUC)
+
+# Fazer previsões para as características de teste
+previsoes = knn.predict(caracteristicasTestePUC)
+
+# Imprimir as previsões
+for previsao in previsoes:
+    print(previsao)
+
+    # Printando previsão certa
+    print('Ocupação: ' + ocupacoesPUC[previsao])
