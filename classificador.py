@@ -20,7 +20,7 @@ class KNN:
 
     def _predict(self, x):
         # Distancias entre o ponto x e todos os outros pontos
-        distancias = [distanciaEuclidiana(x, x_train) for x_train in self.X_treino]
+        distancias = [distanciaEuclidiana(x, x_treino) for x_treino in self.X_treino]
     
         # Pegando os índices dos k vizinhos mais próximos
         k_indices = np.argsort(distancias)[:self.k]
