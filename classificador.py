@@ -42,7 +42,7 @@ kValor = 3
 
 # Vetores para armazenar os dados de treinamento
 dadosTreinoUFPR04 = [] # X_treino
-ocupacoesUFPR04 = [] # y_treino
+ocupacoesTreinoUFPR04 = [] # y_treino
 
 # Preenchendo vetores de treinamento
 with open(caminhoArquivoCSV_treino_normalizado_UFPR04, 'r') as arquivoCSV_treino_normalizado_UFPR04:
@@ -61,11 +61,11 @@ with open(caminhoArquivoCSV_treino_normalizado_UFPR04, 'r') as arquivoCSV_treino
 
         # Adicionando os dados de treino e a ocupação nas listas
         dadosTreinoUFPR04.append(caracteristicas)
-        ocupacoesUFPR04.append(ocupacao)
+        ocupacoesTreinoUFPR04.append(ocupacao)
     
 # Convertendo listas para numpy arrays
 dadosTreinoUFPR04 = np.array(dadosTreinoUFPR04)
-ocupacoesUFPR04 = np.array(ocupacoesUFPR04)
+ocupacoesTreinoUFPR04 = np.array(ocupacoesTreinoUFPR04)
 
 # Diretório para .csv de teste
 caminhoArquivoCSV_teste_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_teste.csv')
@@ -75,6 +75,7 @@ with open(caminhoArquivoCSV_teste_UFPR04, 'r') as arquivoCSV_teste_UFPR04:
     leitor = csv.reader(arquivoCSV_teste_UFPR04)
 
     caracteristicasTesteUFPR04 = []
+    ocupacoesTesteUFPR04 = []
 
     # Iterando nas linhas do arquivo .csv para retirar características
     for linha in leitor:
@@ -84,19 +85,24 @@ with open(caminhoArquivoCSV_teste_UFPR04, 'r') as arquivoCSV_teste_UFPR04:
         # Colocando as características da linha em um vetor
         caracteristicas = np.array([float(campo) for campo in campos[:-1]])
 
+        # Retirando a ocupação
+        ocupacao = campos[-1]
+
         # Adicionando as características na lista
         caracteristicasTesteUFPR04.append(caracteristicas)
+        ocupacoesTesteUFPR04.append(ocupacao)
 
 # Convertendo lista para numpy array
 caracteristicasTesteUFPR04 = np.array(caracteristicasTesteUFPR04)
+ocupacoesTesteUFPR04 = np.array(ocupacoesTesteUFPR04)
 
 # Criar o classificador KNN
 knn = KNN(kValor)
-knn.fit(dadosTreinoUFPR04, ocupacoesUFPR04)
+knn.fit(dadosTreinoUFPR04, ocupacoesTreinoUFPR04)
 
 # Fazer previsões para as características de teste
 previsoes = knn.predict(caracteristicasTesteUFPR04)
 
 # Imprimir acurácia
-acuracia = np.sum(previsoes == ocupacoesUFPR04) / len(ocupacoesUFPR04)
+acuracia = np.sum(previsoes == ocupacoesTesteUFPR04) / len(ocupacoesTesteUFPR04)
 print('Acurácia: ', acuracia)
