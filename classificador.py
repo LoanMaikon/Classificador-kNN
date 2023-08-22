@@ -68,14 +68,15 @@ dadosTreinoUFPR04 = np.array(dadosTreinoUFPR04)
 ocupacoesTreinoUFPR04 = np.array(ocupacoesTreinoUFPR04)
 
 # Diretório para .csv de teste
-caminhoArquivoCSV_teste_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_teste.csv')
+caminhoArquivoCSV_teste_normalizado_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_teste_normalizado.csv')
+
+# Vetores para armazenar os dados de teste
+caracteristicasTesteUFPR04 = []
+ocupacoesTesteUFPR04 = []
 
 # Colocando as características de teste em um vetor
-with open(caminhoArquivoCSV_teste_UFPR04, 'r') as arquivoCSV_teste_UFPR04:
+with open(caminhoArquivoCSV_teste_normalizado_UFPR04, 'r') as arquivoCSV_teste_UFPR04:
     leitor = csv.reader(arquivoCSV_teste_UFPR04)
-
-    caracteristicasTesteUFPR04 = []
-    ocupacoesTesteUFPR04 = []
 
     # Iterando nas linhas do arquivo .csv para retirar características
     for linha in leitor:
