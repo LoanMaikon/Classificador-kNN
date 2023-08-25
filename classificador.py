@@ -210,9 +210,9 @@ previsoesUFPR04xPUC = knn.predict(caracteristicasTestePUC)
 previsoesUFPR04xUFPR05 = knn.predict(caracteristicasTesteUFPR05)
 
 # Imprimir acurácia
-acuraciaUFPR04xUFPR04 = np.sum(previsoes == ocupacoesTesteUFPR04) / len(ocupacoesTesteUFPR04)
-acuraciaUFPR04xPUC = np.sum(previsoes == ocupacoesTestePUC) / len(ocupacoesTestePUC)
-acuraciaUFPR04xUFPR05 = np.sum(previsoes == ocupacoesTesteUFPR05) / len(ocupacoesTesteUFPR05)
+acuraciaUFPR04xUFPR04 = np.sum(previsoesUFPR04xUFPR04 == ocupacoesTesteUFPR04) / len(ocupacoesTesteUFPR04)
+acuraciaUFPR04xPUC = np.sum(previsoesUFPR04xPUC == ocupacoesTestePUC) / len(ocupacoesTestePUC)
+acuraciaUFPR04xUFPR05 = np.sum(previsoesUFPR04xUFPR05 == ocupacoesTesteUFPR05) / len(ocupacoesTesteUFPR05)
 
 print("Acurácia (treino) UFPR04 x (teste) UFPR04: ", acuraciaUFPR04xUFPR04)
 print("Acurácia (treino) UFPR04 x (teste) PUC: ", acuraciaUFPR04xPUC)
@@ -227,9 +227,9 @@ previsoesPUCxPUC = knn.predict(caracteristicasTestePUC)
 previsoesPUCxUFPR05 = knn.predict(caracteristicasTesteUFPR05)
 
 # Imprimir acurácia
-acuraciaPUCxUFPR04 = np.sum(previsoes == ocupacoesTesteUFPR04) / len(ocupacoesTesteUFPR04)
-acuraciaPUCxPUC = np.sum(previsoes == ocupacoesTestePUC) / len(ocupacoesTestePUC)
-acuraciaPUCxUFPR05 = np.sum(previsoes == ocupacoesTesteUFPR05) / len(ocupacoesTesteUFPR05)
+acuraciaPUCxUFPR04 = np.sum(previsoesPUCxUFPR04 == ocupacoesTesteUFPR04) / len(ocupacoesTesteUFPR04)
+acuraciaPUCxPUC = np.sum(previsoesPUCxPUC == ocupacoesTestePUC) / len(ocupacoesTestePUC)
+acuraciaPUCxUFPR05 = np.sum(previsoesPUCxUFPR05 == ocupacoesTesteUFPR05) / len(ocupacoesTesteUFPR05)
 
 print("Acurácia (treino) PUC x (teste) UFPR04: ", acuraciaPUCxUFPR04)
 print("Acurácia (treino) PUC x (teste) PUC: ", acuraciaPUCxPUC)
@@ -244,9 +244,9 @@ previsoesUFPR05xPUC = knn.predict(caracteristicasTestePUC)
 previsoesUFPR05xUFPR05 = knn.predict(caracteristicasTesteUFPR05)
 
 # Imprimir acurácia
-acuraciaUFPR05xUFPR04 = np.sum(previsoes == ocupacoesTesteUFPR04) / len(ocupacoesTesteUFPR04)
-acuraciaUFPR05xPUC = np.sum(previsoes == ocupacoesTestePUC) / len(ocupacoesTestePUC)
-acuraciaUFPR05xUFPR05 = np.sum(previsoes == ocupacoesTesteUFPR05) / len(ocupacoesTesteUFPR05)
+acuraciaUFPR05xUFPR04 = np.sum(previsoesUFPR05xUFPR04 == ocupacoesTesteUFPR04) / len(ocupacoesTesteUFPR04)
+acuraciaUFPR05xPUC = np.sum(previsoesUFPR05xPUC == ocupacoesTestePUC) / len(ocupacoesTestePUC)
+acuraciaUFPR05xUFPR05 = np.sum(previsoesUFPR05xUFPR05 == ocupacoesTesteUFPR05) / len(ocupacoesTesteUFPR05)
 
 print("Acurácia (treino) UFPR05 x (teste) UFPR04: ", acuraciaUFPR05xUFPR04)
 print("Acurácia (treino) UFPR05 x (teste) PUC: ", acuraciaUFPR05xPUC)
