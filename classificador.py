@@ -30,27 +30,6 @@ class KNN:
         predicao = Counter(ocupacoesProximas).most_common()
         return predicao[0][0]
 
-# Caminho para o diretório das imagens
-caminhoDiretorio = '/home/luan/Desktop/PKLot/PKLotSegmented'
-
-# Caminhos para as pastas das universidades
-caminhoUFPR04 = os.path.join(caminhoDiretorio, 'UFPR04')
-caminhoPUC = os.path.join(caminhoDiretorio, 'PUC')
-caminhoUFPR05 = os.path.join(caminhoDiretorio, 'UFPR05')
-
-# Diretório para .csv de treino
-caminhoArquivoCSV_treino_normalizado_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_treino_normalizado.csv')
-caminhoArquivoCSV_treino_normalizado_PUC = os.path.join(caminhoPUC, 'caracteristicas_treino_normalizado.csv')
-caminhoArquivoCSV_treino_normalizado_UFPR05 = os.path.join(caminhoUFPR05, 'caracteristicas_treino_normalizado.csv')
-
-# Diretório para .csv de teste
-caminhoArquivoCSV_teste_normalizado_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_teste_normalizado.csv')
-caminhoArquivoCSV_teste_normalizado_PUC = os.path.join(caminhoPUC, 'caracteristicas_teste_normalizado.csv')
-caminhoArquivoCSV_teste_normalizado_UFPR05 = os.path.join(caminhoUFPR05, 'caracteristicas_teste_normalizado.csv')
-
-# Definindo k-NN de 3 vizinhos
-kValor = 3
-
 # Gera vetor de dados para treino e teste
 def gerarVetorDados(caminhoArquivoCSV):
     # Vetores para armazenar os dados de treinamento
@@ -81,6 +60,27 @@ def gerarVetorDados(caminhoArquivoCSV):
     ocupacoesTreino = np.array(ocupacoesTreino)
 
     return dadosTreino, ocupacoesTreino
+
+# Caminho para o diretório das imagens
+caminhoDiretorio = '/home/luan/Desktop/PKLot/PKLotSegmented'
+
+# Caminhos para as pastas das universidades
+caminhoUFPR04 = os.path.join(caminhoDiretorio, 'UFPR04')
+caminhoPUC = os.path.join(caminhoDiretorio, 'PUC')
+caminhoUFPR05 = os.path.join(caminhoDiretorio, 'UFPR05')
+
+# Diretório para .csv de treino
+caminhoArquivoCSV_treino_normalizado_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_treino_normalizado.csv')
+caminhoArquivoCSV_treino_normalizado_PUC = os.path.join(caminhoPUC, 'caracteristicas_treino_normalizado.csv')
+caminhoArquivoCSV_treino_normalizado_UFPR05 = os.path.join(caminhoUFPR05, 'caracteristicas_treino_normalizado.csv')
+
+# Diretório para .csv de teste
+caminhoArquivoCSV_teste_normalizado_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_teste_normalizado.csv')
+caminhoArquivoCSV_teste_normalizado_PUC = os.path.join(caminhoPUC, 'caracteristicas_teste_normalizado.csv')
+caminhoArquivoCSV_teste_normalizado_UFPR05 = os.path.join(caminhoUFPR05, 'caracteristicas_teste_normalizado.csv')
+
+# Definindo k-NN de 3 vizinhos
+kValor = 3
 
 dadosTreinoUFPR04, ocupacoesTreinoUFPR04 = gerarVetorDados(caminhoArquivoCSV_treino_normalizado_UFPR04)
 dadosTreinoPUC, ocupacoesTreinoPUC = gerarVetorDados(caminhoArquivoCSV_treino_normalizado_PUC)
