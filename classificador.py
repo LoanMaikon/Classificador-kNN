@@ -33,171 +33,63 @@ class KNN:
 # Caminho para o diretório das imagens
 caminhoDiretorio = '/home/luan/Desktop/PKLot/PKLotSegmented'
 
-# Retirando dados da UFPR04
+# Caminhos para as pastas das universidades
 caminhoUFPR04 = os.path.join(caminhoDiretorio, 'UFPR04')
-caminhoArquivoCSV_treino_normalizado_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_treino_normalizado.csv')
 caminhoPUC = os.path.join(caminhoDiretorio, 'PUC')
-caminhoArquivoCSV_treino_normalizado_PUC = os.path.join(caminhoPUC, 'caracteristicas_treino_normalizado.csv')
 caminhoUFPR05 = os.path.join(caminhoDiretorio, 'UFPR05')
+
+# Diretório para .csv de treino
+caminhoArquivoCSV_treino_normalizado_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_treino_normalizado.csv')
+caminhoArquivoCSV_treino_normalizado_PUC = os.path.join(caminhoPUC, 'caracteristicas_treino_normalizado.csv')
 caminhoArquivoCSV_treino_normalizado_UFPR05 = os.path.join(caminhoUFPR05, 'caracteristicas_treino_normalizado.csv')
-
-# Definindo k-NN de 3 vizinhos
-kValor = 3
-
-# Vetores para armazenar os dados de treinamento
-dadosTreinoUFPR04 = [] # X_treino
-ocupacoesTreinoUFPR04 = [] # y_treino
-dadosTreinoPUC = [] # X_treino
-ocupacoesTreinoPUC = [] # y_treino
-dadosTreinoUFPR05 = [] # X_treino
-ocupacoesTreinoUFPR05 = [] # y_treino
-
-# Preenchendo vetores de treinamento
-with open(caminhoArquivoCSV_treino_normalizado_UFPR04, 'r') as arquivoCSV_treino_normalizado_UFPR04:
-    leitor = csv.reader(arquivoCSV_treino_normalizado_UFPR04)
-    
-    # Iterando nas linhas do arquivo .csv para retirar características e ocupação
-    for linha in leitor:
-        # Separando os campos da linha
-        campos = linha[0].split(';')
-
-        # Colocando as características da linha em um vetor
-        caracteristicas = np.array([float(campo) for campo in campos[:-1]])
-
-        # Retirando a ocupação
-        ocupacao = campos[-1]
-
-        # Adicionando os dados de treino e a ocupação nas listas
-        dadosTreinoUFPR04.append(caracteristicas)
-        ocupacoesTreinoUFPR04.append(ocupacao)
-    
-# Convertendo listas para numpy arrays
-dadosTreinoUFPR04 = np.array(dadosTreinoUFPR04)
-ocupacoesTreinoUFPR04 = np.array(ocupacoesTreinoUFPR04)
-
-# Preenchendo vetores de treinamento
-with open(caminhoArquivoCSV_treino_normalizado_PUC, 'r') as arquivoCSV_treino_normalizado_PUC:
-    leitor = csv.reader(arquivoCSV_treino_normalizado_PUC)
-    
-    # Iterando nas linhas do arquivo .csv para retirar características e ocupação
-    for linha in leitor:
-        # Separando os campos da linha
-        campos = linha[0].split(';')
-
-        # Colocando as características da linha em um vetor
-        caracteristicas = np.array([float(campo) for campo in campos[:-1]])
-
-        # Retirando a ocupação
-        ocupacao = campos[-1]
-
-        # Adicionando os dados de treino e a ocupação nas listas
-        dadosTreinoPUC.append(caracteristicas)
-        ocupacoesTreinoPUC.append(ocupacao)
-
-# Convertendo listas para numpy arrays
-dadosTreinoPUC = np.array(dadosTreinoPUC)
-ocupacoesTreinoPUC = np.array(ocupacoesTreinoPUC)
-
-# Preenchendo vetores de treinamento
-with open(caminhoArquivoCSV_treino_normalizado_UFPR05, 'r') as arquivoCSV_treino_normalizado_UFPR05:
-    leitor = csv.reader(arquivoCSV_treino_normalizado_UFPR05)
-    
-    # Iterando nas linhas do arquivo .csv para retirar características e ocupação
-    for linha in leitor:
-        # Separando os campos da linha
-        campos = linha[0].split(';')
-
-        # Colocando as características da linha em um vetor
-        caracteristicas = np.array([float(campo) for campo in campos[:-1]])
-
-        # Retirando a ocupação
-        ocupacao = campos[-1]
-
-        # Adicionando os dados de treino e a ocupação nas listas
-        dadosTreinoUFPR05.append(caracteristicas)
-        ocupacoesTreinoUFPR05.append(ocupacao)
-
-# Convertendo listas para numpy arrays
-dadosTreinoUFPR05 = np.array(dadosTreinoUFPR05)
-ocupacoesTreinoUFPR05 = np.array(ocupacoesTreinoUFPR05)
 
 # Diretório para .csv de teste
 caminhoArquivoCSV_teste_normalizado_UFPR04 = os.path.join(caminhoUFPR04, 'caracteristicas_teste_normalizado.csv')
 caminhoArquivoCSV_teste_normalizado_PUC = os.path.join(caminhoPUC, 'caracteristicas_teste_normalizado.csv')
 caminhoArquivoCSV_teste_normalizado_UFPR05 = os.path.join(caminhoUFPR05, 'caracteristicas_teste_normalizado.csv')
 
+# Definindo k-NN de 3 vizinhos
+kValor = 3
+
+# Gera vetor de dados para treino e teste
+def gerarVetorDados(caminhoArquivoCSV):
+    # Vetores para armazenar os dados de treinamento
+    dadosTreino = [] # X_treino
+    ocupacoesTreino = [] # y_treino
+
+    # Preenchendo vetores de treinamento
+    with open(caminhoArquivoCSV, 'r') as arquivoCSV_treino_normalizado:
+        leitor = csv.reader(arquivoCSV_treino_normalizado)
+        
+        # Iterando nas linhas do arquivo .csv para retirar características e ocupação
+        for linha in leitor:
+            # Separando os campos da linha
+            campos = linha[0].split(';')
+
+            # Colocando as características da linha em um vetor
+            caracteristicas = np.array([float(campo) for campo in campos[:-1]])
+
+            # Retirando a ocupação
+            ocupacao = campos[-1]
+
+            # Adicionando os dados de treino e a ocupação nas listas
+            dadosTreino.append(caracteristicas)
+            ocupacoesTreino.append(ocupacao)
+    
+    # Convertendo listas para numpy arrays
+    dadosTreino = np.array(dadosTreino)
+    ocupacoesTreino = np.array(ocupacoesTreino)
+
+    return dadosTreino, ocupacoesTreino
+
+dadosTreinoUFPR04, ocupacoesTreinoUFPR04 = gerarVetorDados(caminhoArquivoCSV_treino_normalizado_UFPR04)
+dadosTreinoPUC, ocupacoesTreinoPUC = gerarVetorDados(caminhoArquivoCSV_treino_normalizado_PUC)
+dadosTreinoUFPR05, ocupacoesTreinoUFPR05 = gerarVetorDados(caminhoArquivoCSV_treino_normalizado_UFPR05)
+
 # Vetores para armazenar os dados de teste
-caracteristicasTesteUFPR04 = []
-ocupacoesTesteUFPR04 = []
-caracteristicasTestePUC = []
-ocupacoesTestePUC = []
-caracteristicasTesteUFPR05 = []
-ocupacoesTesteUFPR05 = []
-
-# Colocando as características de teste em um vetor
-with open(caminhoArquivoCSV_teste_normalizado_UFPR04, 'r') as arquivoCSV_teste_UFPR04:
-    leitor = csv.reader(arquivoCSV_teste_UFPR04)
-
-    # Iterando nas linhas do arquivo .csv para retirar características
-    for linha in leitor:
-        # Separando os campos da linha
-        campos = linha[0].split(';')
-
-        # Colocando as características da linha em um vetor
-        caracteristicas = np.array([float(campo) for campo in campos[:-1]])
-
-        # Retirando a ocupação
-        ocupacao = campos[-1]
-
-        # Adicionando as características na lista
-        caracteristicasTesteUFPR04.append(caracteristicas)
-        ocupacoesTesteUFPR04.append(ocupacao)
-
-# Colocando as características de teste em um vetor
-with open(caminhoArquivoCSV_teste_normalizado_PUC, 'r') as arquivoCSV_teste_PUC:
-    leitor = csv.reader(arquivoCSV_teste_PUC)
-
-    # Iterando nas linhas do arquivo .csv para retirar características
-    for linha in leitor:
-        # Separando os campos da linha
-        campos = linha[0].split(';')
-
-        # Colocando as características da linha em um vetor
-        caracteristicas = np.array([float(campo) for campo in campos[:-1]])
-
-        # Retirando a ocupação
-        ocupacao = campos[-1]
-
-        # Adicionando as características na lista
-        caracteristicasTestePUC.append(caracteristicas)
-        ocupacoesTestePUC.append(ocupacao)
-
-# Colocando as características de teste em um vetor
-with open(caminhoArquivoCSV_teste_normalizado_UFPR05, 'r') as arquivoCSV_teste_UFPR05:
-    leitor = csv.reader(arquivoCSV_teste_UFPR05)
-
-    # Iterando nas linhas do arquivo .csv para retirar características
-    for linha in leitor:
-        # Separando os campos da linha
-        campos = linha[0].split(';')
-
-        # Colocando as características da linha em um vetor
-        caracteristicas = np.array([float(campo) for campo in campos[:-1]])
-
-        # Retirando a ocupação
-        ocupacao = campos[-1]
-
-        # Adicionando as características na lista
-        caracteristicasTesteUFPR05.append(caracteristicas)
-        ocupacoesTesteUFPR05.append(ocupacao)
-
-# Convertendo lista para numpy array
-caracteristicasTesteUFPR04 = np.array(caracteristicasTesteUFPR04)
-ocupacoesTesteUFPR04 = np.array(ocupacoesTesteUFPR04)
-caracteristicasTestePUC = np.array(caracteristicasTestePUC)
-ocupacoesTestePUC = np.array(ocupacoesTestePUC)
-caracteristicasTesteUFPR05 = np.array(caracteristicasTesteUFPR05)
-ocupacoesTesteUFPR05 = np.array(ocupacoesTesteUFPR05)
+dadosTesteUFPR04, ocupacoesTesteUFPR04 = gerarVetorDados(caminhoArquivoCSV_teste_normalizado_UFPR04)
+dadosTestePUC, ocupacoesTestePUC = gerarVetorDados(caminhoArquivoCSV_teste_normalizado_PUC)
+dadosTesteUFPR05, ocupacoesTesteUFPR05 = gerarVetorDados(caminhoArquivoCSV_teste_normalizado_UFPR05)
 
 knn = KNN(kValor) # Inicializando k = 3
 
@@ -257,9 +149,9 @@ acuraciaMediaUFPR04 = (acuraciaUFPR04xUFPR04 + acuraciaUFPR04xPUC + acuraciaUFPR
 acuraciaMediaPUC = (acuraciaPUCxUFPR04 + acuraciaPUCxPUC + acuraciaPUCxUFPR05) / 3
 acuraciaMediaUFPR05 = (acuraciaUFPR05xUFPR04 + acuraciaUFPR05xPUC + acuraciaUFPR05xUFPR05) / 3
 
-print("Acurácia média (treino) UFPR04: ", acuraciaMediaUFPR04)
-print("Acurácia média (treino) PUC: ", acuraciaMediaPUC)
-print("Acurácia média (treino) UFPR05: ", acuraciaMediaUFPR05)
+print("Acurácia média (treino) x (teste) UFPR04: ", acuraciaMediaUFPR04)
+print("Acurácia média (treino) x (teste) PUC: ", acuraciaMediaPUC)
+print("Acurácia média (treino) x (teste) UFPR05: ", acuraciaMediaUFPR05)
 
 # Calculando a acurácia geral
 acuraciaGeral = (acuraciaMediaUFPR04 + acuraciaMediaPUC + acuraciaMediaUFPR05) / 3
