@@ -143,17 +143,3 @@ acuraciaUFPR05xUFPR05 = np.sum(previsoesUFPR05xUFPR05 == ocupacoesTesteUFPR05) /
 print("Acurácia (treino) UFPR05 x (teste) UFPR04: ", acuraciaUFPR05xUFPR04)
 print("Acurácia (treino) UFPR05 x (teste) PUC: ", acuraciaUFPR05xPUC)
 print("Acurácia (treino) UFPR05 x (teste) UFPR05: ", acuraciaUFPR05xUFPR05)
-
-# Calculando a acurácia média
-acuraciaMediaUFPR04 = (acuraciaUFPR04xUFPR04 + acuraciaUFPR04xPUC + acuraciaUFPR04xUFPR05) / 3
-acuraciaMediaPUC = (acuraciaPUCxUFPR04 + acuraciaPUCxPUC + acuraciaPUCxUFPR05) / 3
-acuraciaMediaUFPR05 = (acuraciaUFPR05xUFPR04 + acuraciaUFPR05xPUC + acuraciaUFPR05xUFPR05) / 3
-
-print("Acurácia média (treino) x (teste) UFPR04: ", acuraciaMediaUFPR04)
-print("Acurácia média (treino) x (teste) PUC: ", acuraciaMediaPUC)
-print("Acurácia média (treino) x (teste) UFPR05: ", acuraciaMediaUFPR05)
-
-# Calculando a acurácia geral
-acuraciaGeral = (acuraciaMediaUFPR04 + acuraciaMediaPUC + acuraciaMediaUFPR05) / 3
-
-print("Acurácia geral: ", acuraciaGeral)
